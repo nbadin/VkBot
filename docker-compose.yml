@@ -1,0 +1,8 @@
+services:
+  vkbot:
+    build: .
+    image: vkbot
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xmx512m
