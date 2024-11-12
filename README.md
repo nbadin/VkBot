@@ -15,3 +15,8 @@
 make build
 make up
 ```
+
+## Запуск тестов
+```sh
+make test
+```
