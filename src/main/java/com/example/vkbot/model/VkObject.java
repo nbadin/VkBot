@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import com.google.gson.annotations.SerializedName;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -20,11 +22,13 @@ public class VkObject {
     private ObjectData object;
 
     @Getter
+    @Setter
     public static class ObjectData {
         private Message message;
         private ClientInfo clientInfo;
 
         @Getter
+        @Setter
         public static class Message {
             private long date;
             @SerializedName("from_id")
@@ -46,6 +50,7 @@ public class VkObject {
         }
 
         @Getter
+        @Setter
         public static class ClientInfo {
             @SerializedName("button_actions")
             private String[] buttonActions;

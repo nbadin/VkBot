@@ -22,3 +22,6 @@ down:
 	docker compose down
 
 build: build-gradle build-docker
+
+test:
+	./gradlew test
