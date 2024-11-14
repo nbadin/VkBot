@@ -16,7 +16,7 @@ stop:
 	docker stop $(CONTAINER_NAME) || true
 
 up: 
-	docker compose --env-file .env up -d
+	TOKEN=$(TOKEN) CONFIRM_CODE=$(CONFIRM_CODE) docker compose up -d
 
 down:
 	docker compose down
