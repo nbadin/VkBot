@@ -9,6 +9,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.web.client.RestClientException;
+import org.springframework.retry.annotation.Recover;
 
 @Slf4j
 @Service
@@ -30,6 +34,11 @@ public class RepeatMessageService implements IBotService {
     }
 
     @Override
+    @Retryable(
+            retryFor = {RestClientException.class},
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
     public boolean execute(VkObject vkObject) {
         try {
             VkObject.ObjectData data = vkObject.getObject();
@@ -54,10 +63,17 @@ public class RepeatMessageService implements IBotService {
             ResponseEntity<String> response = restTemplate.postForEntity(url, bodyParams, String.class);
 
             log.info("Response from VK API: {}", response.getBody());
-        } catch (Exception e) {
-            log.error("Error executing VK message repeat: ", e);
-            return false;
+        } catch (RestClientException e) {
+            log.error("Error on attempt {}", e.getMessage());
+            throw e;
         }
+
         return true;
+    }
+
+    @Recover
+    public boolean recover(RestClientException e) {
+        log.error("All retry attempts failed: {}", e.getMessage());
+        return false;
     }
 }

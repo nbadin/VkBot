@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.junit.jupiter.api.extension.ExtendWith;
 import java.lang.reflect.Field;
+import org.springframework.web.client.RestClientException;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,12 +82,19 @@ class RepeatMessageServiceTest {
     }
 
     @Test
-    void executeShouldReturnFalseIfRestTemplateThrowsException() {
+    void executeShouldRetryIfRestTemplateThrowsException() {
         when(restTemplate.postForEntity(anyString(), any(MultiValueMap.class), eq(String.class)))
-                .thenThrow(new RuntimeException("VK API Error"));
+                .thenThrow(new RestClientException("Some Error"))
+                .thenReturn(ResponseEntity.ok("ok"));
 
-        boolean result = repeatMessageService.execute(vkObject);
+        try {
+            repeatMessageService.execute(vkObject);
+        } catch (RestClientException e) {
+            assertEquals("Some Error", e.getMessage());
+            boolean result = repeatMessageService.execute(vkObject);
+            assertTrue(result);
+        }
 
-        assertFalse(result);
+        verify(restTemplate, times(2)).postForEntity(anyString(), any(MultiValueMap.class), eq(String.class));
     }
 }

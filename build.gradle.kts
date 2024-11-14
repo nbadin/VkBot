@@ -22,6 +22,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     compileOnly("org.projectlombok:lombok:1.18.34")
+    implementation("org.springframework.retry:spring-retry:2.0.9")
+    implementation("org.springframework.boot:spring-boot-starter-aop:3.3.4")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("com.google.code.gson:gson:2.10.1")

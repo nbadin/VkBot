@@ -6,9 +6,11 @@
     import org.springframework.http.HttpHeaders;
     import org.springframework.http.MediaType;
     import org.springframework.http.client.ClientHttpRequestInterceptor;
+    import org.springframework.retry.annotation.EnableRetry;
     import java.util.Collections;
 
     @Configuration
+    @EnableRetry
     public class BotConfiguration {
         @Bean
         public RestTemplate restTemplate() {
