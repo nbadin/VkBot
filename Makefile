@@ -16,7 +16,7 @@ stop:
 	docker stop $(CONTAINER_NAME) || true
 
 up: 
-	docker compose up -d
+	docker compose --env-file .env up -d
 
 down:
 	docker compose down
